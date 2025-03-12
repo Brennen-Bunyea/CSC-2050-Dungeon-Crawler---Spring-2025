@@ -8,11 +8,16 @@ public class Player
     public Player(string name)
     {
         this.name = name;
+        this.currentRoom = null;
+    }
+
+    public Room getCurrentRoom()
+    {
+        return this.currentRoom;
     }
 
     public void setCurrentRoom(Room r)
     {
         this.currentRoom = r;
     }
-
 }
