@@ -1,21 +1,26 @@
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class RoomManager : MonoBehaviour
 {
     public GameObject[] theDoors;
+    public GameObject mmRoomPrefab;
     private Dungeon theDungeon;
-    
+    private bool r2 = false;
+    private bool r3 = false;
+    private bool r4 = false;
+    private bool r5 = false;
+    private bool r6 = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Core.thePlayer = new Player("Mike");
         this.theDungeon = new Dungeon();
-        this.resetRoom();
         this.setupRoom();
-        
     }
 
-    //disable all rooms
+    //disable all doors
     private void resetRoom()
     {
         this.theDoors[0].SetActive(false);
@@ -24,7 +29,7 @@ public class RoomManager : MonoBehaviour
         this.theDoors[3].SetActive(false);
     }
 
-    //Show the doors appropriate to the current room
+    //show the doors appropriate to the current room
     private void setupRoom()
     {
         Room currentRoom = Core.thePlayer.getCurrentRoom();
@@ -37,33 +42,107 @@ public class RoomManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.UpArrow))
+        bool didChangeRoom = false;
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Debug.Log("Up");
-            Core.thePlayer.getCurrentRoom().tryToTakeExit("north");
-            this.setupRoom();
-            //Try to go north
+            //try to goto the north
+            didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("north");
+            if (didChangeRoom == true && r2 == false)
+            {
+                string currRoom = Core.thePlayer.getCurrentRoom().getName();
+                if(currRoom == "r2")
+                {
+                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
+                    Vector3 currPos = newMMRoom.transform.position;
+                    Vector3 newPos;
+                    newPos.x = currPos.x;
+                    newPos.y = currPos.y;
+                    newPos.z = currPos.z + -1.2f;
+                    newMMRoom.transform.position = newPos;
+                    r2 = true;
+                }
+            }
+            else if (didChangeRoom == true && r2 == true && r3 == false)
+            {
+                string currRoom = Core.thePlayer.getCurrentRoom().getName();
+                if (currRoom == "r3")
+                {
+                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
+                    Vector3 currPos = newMMRoom.transform.position;
+                    Vector3 newPos;
+                    newPos.x = currPos.x;
+                    newPos.y = currPos.y;
+                    newPos.z = currPos.z + -2.4f;
+                    newMMRoom.transform.position = newPos;
+                    r3 = true;
+                }
+            }
+            else if (didChangeRoom == true && r2 == true && r3 == true && r6 == false)
+            {
+                string currRoom = Core.thePlayer.getCurrentRoom().getName();
+                if (currRoom == "r6")
+                {
+                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
+                    Vector3 currPos = newMMRoom.transform.position;
+                    Vector3 newPos;
+                    newPos.x = currPos.x;
+                    newPos.y = currPos.y;
+                    newPos.z = currPos.z + -3.6f;
+                    newMMRoom.transform.position = newPos;
+                    r6 = true;
+                }
+            }
         }
-        else if(Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Debug.Log("Down");
-            Core.thePlayer.getCurrentRoom().tryToTakeExit("south");
-            this.setupRoom();
-            //Try to go south
+            //try to goto the west
+            didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("west");
+            if(didChangeRoom == true && r3 == true && r4 == false)
+            {
+                string currRoom = Core.thePlayer.getCurrentRoom().getName();
+                if (currRoom == "r4")
+                {
+                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
+                    Vector3 currPos = newMMRoom.transform.position;
+                    Vector3 newPos;
+                    newPos.x = currPos.x + 1.2f;
+                    newPos.y = currPos.y;
+                    newPos.z = currPos.z + -2.4f;
+                    newMMRoom.transform.position = newPos;
+                    r4 = true;
+                }
+            }
         }
-        else if(Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Debug.Log("Right");
-            Core.thePlayer.getCurrentRoom().tryToTakeExit("east");
-            this.setupRoom();
-            //Try to go west
+            //try to goto the east
+            didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("east");
+            if(didChangeRoom == true && r3 == true && r5 == false)
+            {
+                string currRoom = Core.thePlayer.getCurrentRoom().getName();
+                if (currRoom == "r5")
+                {
+                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
+                    Vector3 currPos = newMMRoom.transform.position;
+                    Vector3 newPos;
+                    newPos.x = currPos.x + -1.2f;
+                    newPos.y = currPos.y;
+                    newPos.z = currPos.z + -2.4f;
+                    newMMRoom.transform.position = newPos;
+                    r5 = true;
+                }
+            }
         }
-        else if(Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Debug.Log("Left");
-            Core.thePlayer.getCurrentRoom().tryToTakeExit("west");
+            //try to goto the south
+            didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("south");
+        }
+
+        //did we change rooms?
+        if (didChangeRoom)
+        {
             this.setupRoom();
-            //Try to go east
         }
     }
 }
