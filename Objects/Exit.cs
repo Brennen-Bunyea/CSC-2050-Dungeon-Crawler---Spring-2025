@@ -1,9 +1,11 @@
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Exit
 {
     private string direction;
-    Room destination;
+    private Room destination;
 
     public Exit(string direction, Room destination)
     {
@@ -15,7 +17,8 @@ public class Exit
     {
         return this.direction;
     }
-    public Room GetDestinationRoom()
+
+    public Room getDestination()
     {
         return this.destination;
     }
