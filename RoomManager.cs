@@ -1,16 +1,13 @@
-using System.Security.Cryptography;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class RoomManager : MonoBehaviour
 {
     public GameObject[] theDoors;
     public GameObject mmRoomPrefab;
     private Dungeon theDungeon;
-    private bool r2 = false;
-    private bool r3 = false;
-    private bool r4 = false;
-    private bool r5 = false;
-    private bool r6 = false;
+
+    private Vector3 mmCurrPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,6 +15,7 @@ public class RoomManager : MonoBehaviour
         Core.thePlayer = new Player("Mike");
         this.theDungeon = new Dungeon();
         this.setupRoom();
+        this.mmCurrPos = Core.mmStartPos;
     }
 
     //disable all doors
@@ -47,49 +45,13 @@ public class RoomManager : MonoBehaviour
         {
             //try to goto the north
             didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("north");
-            if (didChangeRoom == true && r2 == false)
+            if (didChangeRoom)
             {
-                string currRoom = Core.thePlayer.getCurrentRoom().getName();
-                if(currRoom == "r2")
+                this.mmCurrPos.z = this.mmCurrPos.z - 1.2f;
+                if (!Core.thePlayer.getCurrentRoom().getHasPlayerBeenHere())
                 {
                     GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
-                    Vector3 currPos = newMMRoom.transform.position;
-                    Vector3 newPos;
-                    newPos.x = currPos.x;
-                    newPos.y = currPos.y;
-                    newPos.z = currPos.z + -1.2f;
-                    newMMRoom.transform.position = newPos;
-                    r2 = true;
-                }
-            }
-            else if (didChangeRoom == true && r2 == true && r3 == false)
-            {
-                string currRoom = Core.thePlayer.getCurrentRoom().getName();
-                if (currRoom == "r3")
-                {
-                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
-                    Vector3 currPos = newMMRoom.transform.position;
-                    Vector3 newPos;
-                    newPos.x = currPos.x;
-                    newPos.y = currPos.y;
-                    newPos.z = currPos.z + -2.4f;
-                    newMMRoom.transform.position = newPos;
-                    r3 = true;
-                }
-            }
-            else if (didChangeRoom == true && r2 == true && r3 == true && r6 == false)
-            {
-                string currRoom = Core.thePlayer.getCurrentRoom().getName();
-                if (currRoom == "r6")
-                {
-                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
-                    Vector3 currPos = newMMRoom.transform.position;
-                    Vector3 newPos;
-                    newPos.x = currPos.x;
-                    newPos.y = currPos.y;
-                    newPos.z = currPos.z + -3.6f;
-                    newMMRoom.transform.position = newPos;
-                    r6 = true;
+                    newMMRoom.transform.position = this.mmCurrPos;
                 }
             }
         }
@@ -97,19 +59,13 @@ public class RoomManager : MonoBehaviour
         {
             //try to goto the west
             didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("west");
-            if(didChangeRoom == true && r3 == true && r4 == false)
+            if (didChangeRoom)
             {
-                string currRoom = Core.thePlayer.getCurrentRoom().getName();
-                if (currRoom == "r4")
+                this.mmCurrPos.x = this.mmCurrPos.x + 1.2f;
+                if (!Core.thePlayer.getCurrentRoom().getHasPlayerBeenHere())
                 {
                     GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
-                    Vector3 currPos = newMMRoom.transform.position;
-                    Vector3 newPos;
-                    newPos.x = currPos.x + 1.2f;
-                    newPos.y = currPos.y;
-                    newPos.z = currPos.z + -2.4f;
-                    newMMRoom.transform.position = newPos;
-                    r4 = true;
+                    newMMRoom.transform.position = this.mmCurrPos;
                 }
             }
         }
@@ -117,26 +73,31 @@ public class RoomManager : MonoBehaviour
         {
             //try to goto the east
             didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("east");
-            if(didChangeRoom == true && r3 == true && r5 == false)
+            if (didChangeRoom)
             {
-                string currRoom = Core.thePlayer.getCurrentRoom().getName();
-                if (currRoom == "r5")
+                this.mmCurrPos.x = this.mmCurrPos.x - 1.2f;
+                if (!Core.thePlayer.getCurrentRoom().getHasPlayerBeenHere())
                 {
                     GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
-                    Vector3 currPos = newMMRoom.transform.position;
-                    Vector3 newPos;
-                    newPos.x = currPos.x + -1.2f;
-                    newPos.y = currPos.y;
-                    newPos.z = currPos.z + -2.4f;
-                    newMMRoom.transform.position = newPos;
-                    r5 = true;
+                    newMMRoom.transform.position = this.mmCurrPos;
                 }
+
             }
+
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             //try to goto the south
             didChangeRoom = Core.thePlayer.getCurrentRoom().tryToTakeExit("south");
+            if (didChangeRoom)
+            {
+                this.mmCurrPos.z = this.mmCurrPos.z + 1.2f;
+                if (!Core.thePlayer.getCurrentRoom().getHasPlayerBeenHere())
+                {
+                    GameObject newMMRoom = Instantiate(this.mmRoomPrefab);
+                    newMMRoom.transform.position = this.mmCurrPos;
+                }
+            }
         }
 
         //did we change rooms?
