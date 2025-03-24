@@ -19,15 +19,4 @@ public class Player : Inhabitant
     {
         this.currentRoom = r;
     }
-
-    public int getCurrHP()
-    {
-        return this.currHp;
-    }
-
-    public int getMaxHP()
-    {
-        return this.maxHp;
-    }
-    
 }

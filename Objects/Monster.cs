@@ -6,14 +6,4 @@ public class Monster : Inhabitant
     {
 
     }
-
-    public int getCurrHP()
-    {
-        return this.currHp;
-    }
-
-    public int getMaxHP()
-    {
-        return this.maxHp;
-    }
 }

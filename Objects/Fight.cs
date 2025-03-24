@@ -4,63 +4,84 @@ public class Fight
 {
     private Inhabitant attacker;
     private Inhabitant defender;
+    private GameObject playerGO;
+    private GameObject monsterGO;
 
-    public Fight()
+    private Monster theMonster;
+    private bool isFightOver = false;
+    public Fight(Monster m)
     {
+        this.theMonster = m;
+
+        //Initially determine who goes first
         int roll = Random.Range(0, 20) + 1;
         if (roll <= 10)
         {
             Debug.Log("Monster goes first");
-            this.attacker = new Monster("DaveTheMonster");
+            this.attacker = m;
             this.defender = Core.thePlayer;
         }
         else
         {
             Debug.Log("Player goes first");
             this.attacker = Core.thePlayer;
-            this.defender = new Monster("DaveTheMonster");
+            this.defender = m;
         }
     }
 
-    public void startFight()
+    public void startFight(GameObject playerGO, GameObject monsterGO)
     {
-        //should have the attacker and defender fight each other until one of them dies
-        //the attacker and defender should alternate between each fight round
-        //the one who goes first was determined in the constructor
-        //make sure to print it to console
-        //basically the same thing as "deathmatch"
+        this.playerGO = playerGO;
+        this.monsterGO = monsterGO;
+    }
 
-        while(true)
+    //Update the fight to see if I need to attack or end the fight
+    //allows the time between attacks
+    public void updateFight(float deltaTime)
+    {
+        if (isFightOver == true) return;
+        attack();
+    }
+
+    private void attack()
+    {
+        int attackRoll = Random.Range(1, 20) + 1;
+        if (attackRoll >= this.defender.getAC())
         {
-            //Displays the stats of both players
-            attacker.display();
-            defender.display();
+            int damage = Random.Range(1, 6);
+            this.defender.takeDamage(damage);
+            Debug.Log(this.attacker.getName() + " hits " + this.defender.getName() + " for " + damage + " damage!");
+        }
+        else
+        {
+            Debug.Log(this.attacker.getName() + " misses " + this.defender.getName() + "!");
+        }
 
-            //rolls for damage
-            int damage = Random.Range(1, 20) + 1;
-            if(damage >= defender.getAC())
+        if (this.defender.isDead())
+        {
+            Debug.Log(this.defender.getName() + " has been defeated!");
+            if (this.defender is Player)
             {
-                //hits
-                defender.takeDamage(damage);
-                Debug.Log(attacker.getName() + " hits " + defender.getName() + " for " + damage + " damage!");
+                Debug.Log("Player died!");
+                playerGO.SetActive(false);
             }
             else
             {
-                //miss
-                Debug.Log(attacker.getName() + " misses " + defender.getName());
+                Debug.Log("Monster died!");
+                GameObject.Destroy(monsterGO);
             }
-
-            if (defender.isDead())
-            {
-                Debug.Log(defender.getName() + " has been defeated!    " + attacker.getName() + " has won!");
-                break;
-            }
-
-            //swap attacker and defender
-            Inhabitant temp = attacker;
-            attacker = defender;
-            defender = temp;
-            Debug.Log("Next Round!");
+            isFightOver = true;
+            return;
         }
+
+        // Swap roles
+        Inhabitant temp = this.attacker;
+        this.attacker = this.defender;
+        this.defender = temp;
+    }
+
+    public bool IsFightOver()
+    {
+        return isFightOver;
     }
 }
