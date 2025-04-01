@@ -13,7 +13,7 @@ public abstract class Inhabitant
         this.name = name;
         this.maxHp = Random.Range(30, 50);
         this.currHp = this.maxHp;
-        this.ac = Random.Range(10, 20);
+        this.ac = Random.Range(1, 10);
     }
 
     public int getMaxHp()
@@ -22,6 +22,11 @@ public abstract class Inhabitant
     }
     public int getCurrHp()
     {
+        return this.currHp;
+    }
+    public int setCurrHp(int hp)
+    {
+        this.currHp = hp;
         return this.currHp;
     }
     public int getAC()

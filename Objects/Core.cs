@@ -7,6 +7,7 @@ using UnityEngine;
 public class Core
 {
     public static Player thePlayer = new Player("Mike");
+    public static Monster theMonster = new Monster("Goblin");
 
     public static Vector3 mmStartPos = new Vector3(-12, 0, -3);
 
